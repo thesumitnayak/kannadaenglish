@@ -189,14 +189,18 @@ export const useStore = create<State>()(
           return { skills: sk, review };
         });
         get().logActivity({ exercises: 1 });
+        if (ok && key) get().checkAchievements();
       },
 
-      introduce: (keys) => set((s) => {
-        const review = { ...s.review };
-        let changed = false;
-        for (const k of keys) if (!review[k]) { review[k] = newItem(k); changed = true; }
-        return changed ? { review } : {};
-      }),
+      introduce: (keys) => {
+        set((s) => {
+          const review = { ...s.review };
+          let changed = false;
+          for (const k of keys) if (!review[k]) { review[k] = newItem(k); changed = true; }
+          return changed ? { review } : {};
+        });
+        get().checkAchievements();
+      },
 
       recordMistake: (m) => set((s) => {
         // keep one open entry per item; refresh it instead of duplicating
