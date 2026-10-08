@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Maathu · 30-Day Kannada Challenge
 
-## Getting Started
+A spoken-Bengaluru-Kannada learning app for English + Hindi speakers. Day 1 (absolute beginner) → Day 30 (everyday speaker).
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router) · TypeScript strict · Tailwind v4 · Zustand (local persistence) · Supabase (optional cloud sync) · Claude API (optional AI tutor / role-play / translation) · React Three Fiber (3D hero) · Web Speech API (TTS + speech recognition).
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env.local   # optional: add ANTHROPIC_API_KEY and/or Supabase keys
+pnpm dev                     # http://localhost:3000
+pnpm build && pnpm start     # production
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without any env vars the whole 30-day course, reviews, speaking, Bengaluru Mode, "What do I say?", translator (phrasebook) and guided conversations work fully offline. Adding `ANTHROPIC_API_KEY` unlocks the free-form **Kannada Guru**, **Talk to me** role-play with conversation reports, and AI translation. Adding Supabase keys (and running `supabase/schema.sql`) syncs progress across devices.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where things live
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Area | Path |
+|---|---|
+| Course content (30 days) | `src/content/days/*.ts`, index in `src/content/course.ts` |
+| Vocabulary/sentence/conversation types | `src/content/types.ts` |
+| Bengaluru Mode scenarios | `src/content/scenarios.ts` |
+| "What do I say?" situations | `src/content/whatToSay.ts` |
+| Script letters | `src/content/script.ts` · numbers: `src/content/numbers.ts` |
+| Achievements / levels / XP | `src/content/achievements.ts`, `src/content/levels.ts` |
+| Lesson engine (exercise generation, daily-goal scaling, weak-word weighting) | `src/lib/engine/session.ts` |
+| Spaced repetition | `src/lib/engine/srs.ts` · forgiving answer matching: `src/lib/engine/text.ts` |
+| Progress store (XP, streak + freezes, skills, mistakes, review, achievements) | `src/lib/store.ts` |
+| Audio (TTS, speech recognition + scoring) | `src/lib/audio/` |
+| AI routes (Claude) | `src/app/api/ai/*`, prompts in `src/lib/ai/server.ts`, offline fallbacks in `src/lib/ai/local.ts` |
+| Cloud sync | `src/lib/supabase/`, schema in `supabase/schema.sql` |
 
-## Learn More
+## Adding content
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Add a `VocabItem` / `Sentence` / `Conversation` to any day file, or create a new day and register it in `COURSE`. The lesson engine builds warm-up, listening, speaking, building, translation and boss exercises automatically from the data; no UI changes needed.
